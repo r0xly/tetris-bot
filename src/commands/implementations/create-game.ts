@@ -5,7 +5,6 @@ import ButtonId from "../../types/button-id";
 import GameError from "../../types/game-error";
 import ICommand from "../ICommand";
 
-const activeGames = new Collection<string, Game>();
 
 export default class Ping implements ICommand {
     data = new SlashCommandBuilder()
@@ -15,7 +14,7 @@ export default class Ping implements ICommand {
     async execute(interaction: CommandInteraction) {
         const channelId = interaction.channelId;
 
-        if (activeGames.get(channelId)) return interaction.reply(GameError.ActiveGame);
+        if (Game.get(channelId)) return interaction.reply(GameError.ActiveGame);
 
         const game = this.createGame(channelId);
         const row = new MessageActionRow()
@@ -38,9 +37,6 @@ export default class Ping implements ICommand {
     }
 
     private createGame(channelId: string) {
-        const game = new Game();
-        activeGames.set(channelId, game);
-
-        return game;
+        return new Game(channelId);
     }
 }
