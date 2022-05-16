@@ -16,7 +16,7 @@ export default class Ping implements ICommand {
 
         if (Game.get(channelId)) return interaction.reply(GameError.ActiveGame);
 
-        const game = this.createGame(channelId);
+        const game = new Game(channelId, interaction);
         const row = new MessageActionRow()
             .addComponents(
                 new MessageButton()
@@ -34,9 +34,5 @@ export default class Ping implements ICommand {
             );
         
         return interaction.reply({ content: "Game", components: [row]});
-    }
-
-    private createGame(channelId: string) {
-        return new Game(channelId);
     }
 }

@@ -1,12 +1,14 @@
-import { Collection } from "discord.js";
+import { Collection, CommandInteraction } from "discord.js";
 
-const games = new Collection();
+const games = new Collection<string, Game>();
 
 export default class Game {
     private readonly channelId: string;
+    private readonly interaction: CommandInteraction;
 
-    constructor(channelId: string) {
+    constructor(channelId: string, interaction: CommandInteraction) {
         this.channelId = channelId;
+        this.interaction = interaction;
         games.set(channelId, this);
     }
 
@@ -16,5 +18,6 @@ export default class Game {
 
     public end() {
         games.delete(this.channelId);
+        this.interaction.editReply("game over");
     }
 }
