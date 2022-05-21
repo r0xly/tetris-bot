@@ -13,8 +13,6 @@ for (const [_, command] of commands) {
     commandData.push(command.data.toJSON());
 }
 
-console.log(commandData);
-
 rest.put(Routes.applicationGuildCommands(applicationId, guildId), { body: commandData })
     .then(() => console.log("Successfully registered application commands."))
     .catch(console.error);

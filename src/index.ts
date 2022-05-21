@@ -1,6 +1,7 @@
 import { ButtonInteraction, Client, Collection, Intents, Interaction } from "discord.js";
 import commands from "./commands";
 import ICommand from "./commands/ICommand";
+import { Direction } from "./tetris/classes/shape";
 import Game from "./tetris/game";
 import ButtonId from "./types/button-id";
 
@@ -19,7 +20,6 @@ client.on("interactionCreate", async (interaction: Interaction) => {
             await command.execute(interaction);
         } catch (error) {
             console.error(error);
-            await interaction.reply({ content: "There was an error while executing this command!", ephemeral: true })
         }
     } else if (interaction.isButton()) {
         const game = Game.get(interaction.channelId);
@@ -29,6 +29,12 @@ client.on("interactionCreate", async (interaction: Interaction) => {
 
         if (id === ButtonId.EndGame) {
             game.end();
+        } else if (id === ButtonId.MoveLeft) {
+            game.move(Direction.Left);
+        } else if (id === ButtonId.MoveRight) {
+            game.move(Direction.Right);
+        } else if (id === ButtonId.Rotate) {
+            game.rotate();
         }
 
         interaction.deferUpdate();

@@ -5,7 +5,6 @@ import ButtonId from "../../types/button-id";
 import GameError from "../../types/game-error";
 import ICommand from "../ICommand";
 
-
 export default class Ping implements ICommand {
     data = new SlashCommandBuilder()
         .setName("create-game")
@@ -16,23 +15,31 @@ export default class Ping implements ICommand {
 
         if (Game.get(channelId)) return interaction.reply(GameError.ActiveGame);
 
-        const game = new Game(channelId, interaction);
         const row = new MessageActionRow()
             .addComponents(
                 new MessageButton()
                     .setCustomId(ButtonId.MoveLeft)
-                    .setLabel("<")
+                    .setLabel("←")
+                    .setStyle("PRIMARY"),
+                new MessageButton()
+                    .setCustomId(ButtonId.MoveDown)
+                    .setLabel("↓")
                     .setStyle("PRIMARY"),
                 new MessageButton()
                     .setCustomId(ButtonId.MoveRight)
-                    .setLabel(">")
+                    .setLabel("→")
                     .setStyle("PRIMARY"),
+                new MessageButton()
+                    .setCustomId(ButtonId.Rotate)
+                    .setStyle("SUCCESS")
+                    .setLabel("↷"),
                 new MessageButton()
                     .setCustomId(ButtonId.EndGame)
                     .setLabel("x")
                     .setStyle("DANGER"),
             );
-        
-        return interaction.reply({ content: "Game", components: [row]});
+            
+        await interaction.reply({ content: "creating game...", components: [row]});
+        new Game(channelId, interaction);
     }
 }
